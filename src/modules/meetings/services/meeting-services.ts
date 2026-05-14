@@ -8,15 +8,17 @@ import {
   writeBatch,
 } from "firebase/firestore"
 
-import { getDb } from "@/lib/firebase/client"
+import { db, getDb } from "@/lib/firebase/client"
 import { meetingMockData } from "./meeting-mock-data"
 import type { Meeting } from "./types/meeting-types"
 
 const MEETINGS_COLLECTION = "meetings"
 
 export async function getMeetings(): Promise<Meeting[]> {
+  if (!db) return meetingMockData.map(normalizeMeeting)
+
   try {
-    const snapshot = await getDocs(collection(getDb(), MEETINGS_COLLECTION))
+    const snapshot = await getDocs(collection(db, MEETINGS_COLLECTION))
     if (snapshot.empty) return meetingMockData.map(normalizeMeeting)
 
     return snapshot.docs.map((document) =>

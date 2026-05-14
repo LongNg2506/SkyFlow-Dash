@@ -1,5 +1,5 @@
 import { collection, deleteDoc, doc, getDoc, getDocs, setDoc, updateDoc } from "firebase/firestore"
-import { getDb } from "@/lib/firebase/client"
+import { db, getDb } from "@/lib/firebase/client"
 
 import { userMockData } from "./user-mock-data"
 import type { User, UserFormValues, UserWithStats } from "./types/user-types"
@@ -22,8 +22,10 @@ export async function getUsers(): Promise<User[]> {
 }
 
 async function loadUsers(): Promise<User[]> {
+  if (!db) return enforceProjectRoles(userMockData.map((user) => normalizeUser(user)))
+
   try {
-    const snapshot = await getDocs(collection(getDb(), "users"))
+    const snapshot = await getDocs(collection(db, "users"))
 
     if (snapshot.empty) return enforceProjectRoles(userMockData.map((user) => normalizeUser(user)))
 

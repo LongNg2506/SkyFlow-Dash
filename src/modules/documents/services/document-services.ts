@@ -14,15 +14,17 @@ import {
   uploadBytesResumable,
 } from "firebase/storage"
 
-import { getDb, storage } from "@/lib/firebase/client"
+import { db, getDb, storage } from "@/lib/firebase/client"
 import { documentMockData } from "./document-mock-data"
 import type { Document } from "./types/document-types"
 
 const DOCUMENTS_COLLECTION = "documents"
 
 export async function getDocuments(): Promise<Document[]> {
+  if (!db) return documentMockData.map(normalizeDocument)
+
   try {
-    const snapshot = await getDocs(collection(getDb(), DOCUMENTS_COLLECTION))
+    const snapshot = await getDocs(collection(db, DOCUMENTS_COLLECTION))
     if (snapshot.empty) return documentMockData.map(normalizeDocument)
 
     return snapshot.docs.map((document) =>

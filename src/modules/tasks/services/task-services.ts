@@ -8,7 +8,7 @@ import {
   writeBatch,
 } from "firebase/firestore"
 
-import { getDb } from "@/lib/firebase/client"
+import { db, getDb } from "@/lib/firebase/client"
 import type { SystemRole } from "@/modules/users/services/types/user-types"
 import { taskMockData } from "./task-mock-data"
 import type { Task } from "./types/task-types"
@@ -36,8 +36,10 @@ export async function getTasks(): Promise<Task[]> {
 }
 
 async function loadTasks(): Promise<Task[]> {
+  if (!db) return taskMockData.map(normalizeTask)
+
   try {
-    const snapshot = await getDocs(collection(getDb(), TASKS_COLLECTION))
+    const snapshot = await getDocs(collection(db, TASKS_COLLECTION))
     if (snapshot.empty) return taskMockData.map(normalizeTask)
 
     return snapshot.docs.map((document) =>

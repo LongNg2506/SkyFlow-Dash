@@ -6,7 +6,7 @@ export async function getFirestoreCollection<T>(
 ): Promise<T[]> {
   try {
     const { db } = await import("@/lib/firebase/client")
-    if (!db) throw new Error("Firestore not configured")
+    if (!db) return fallbackData
     const snapshot = await getDocs(collection(db, collectionName))
 
     if (snapshot.empty) {
@@ -34,7 +34,7 @@ export async function getFirestoreDocumentCollection<T>(
 ): Promise<T[]> {
   try {
     const { db } = await import("@/lib/firebase/client")
-    if (!db) throw new Error("Firestore not configured")
+    if (!db) return fallbackData
     const snapshot = await getDocs(collection(db, collectionName))
 
     if (snapshot.empty) {
