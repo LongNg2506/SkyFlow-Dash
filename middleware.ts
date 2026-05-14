@@ -2,7 +2,7 @@ import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 
 // Routes that require authentication (redirect to /sign-in if not authenticated)
-const PROTECTED_ROUTES = ["/dashboard", "/dashboard-2", "/dashboard-3", "/tasks", "/users", "/teams", "/chat", "/mail", "/calendar", "/settings", "/mock-data", "/faqs", "/pricing"]
+const PROTECTED_ROUTES = ["/dashboard-2", "/tasks", "/users", "/teams", "/chat", "/mail", "/calendar", "/settings", "/mock-data", "/faqs", "/pricing"]
 
 // Routes only for unauthenticated users (redirect to /dashboard if authenticated)
 const AUTH_ROUTES = ["/sign-in", "/sign-up", "/forgot-password"]
@@ -21,7 +21,7 @@ export function middleware(request: NextRequest) {
   // Root route: always redirect to dashboard
   if (pathname === ROOT_ROUTE) {
     const redirectUrl = request.nextUrl.clone()
-    redirectUrl.pathname = "/dashboard"
+    redirectUrl.pathname = "/dashboard-2"
     return NextResponse.redirect(redirectUrl)
   }
 
@@ -29,7 +29,7 @@ export function middleware(request: NextRequest) {
   if (AUTH_ROUTES.some((route) => pathname.startsWith(route))) {
     if (isAuthenticated) {
       const redirectUrl = request.nextUrl.clone()
-      redirectUrl.pathname = "/dashboard"
+      redirectUrl.pathname = "/dashboard-2"
       return NextResponse.redirect(redirectUrl)
     }
     return response
