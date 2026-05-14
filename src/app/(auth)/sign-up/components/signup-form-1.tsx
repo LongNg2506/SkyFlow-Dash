@@ -75,6 +75,8 @@ export function SignupForm1({
         email: credential.user.email,
         displayName,
         photoURL: credential.user.photoURL,
+      }).catch((error) => {
+        console.warn("Signed up, but failed to sync user profile.", error)
       })
       await setAuthCookieFromIdToken(await credential.user.getIdToken())
       router.push("/dashboard-2")

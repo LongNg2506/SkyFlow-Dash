@@ -61,11 +61,14 @@ export function LoginForm1({
         email: credential.user.email,
         displayName: credential.user.displayName,
         photoURL: credential.user.photoURL,
+      }).catch((error) => {
+        console.warn("Signed in, but failed to sync user profile.", error)
       })
       await setAuthCookieFromIdToken(await credential.user.getIdToken())
       router.push("/dashboard-2")
       router.refresh()
     } catch (error) {
+      console.error("Sign in failed:", error)
       form.setError("root", {
         message: getFirebaseAuthErrorMessage(error),
       })
@@ -82,11 +85,14 @@ export function LoginForm1({
         email: credential.user.email,
         displayName: credential.user.displayName,
         photoURL: credential.user.photoURL,
+      }).catch((error) => {
+        console.warn("Signed in, but failed to sync user profile.", error)
       })
       await setAuthCookieFromIdToken(await credential.user.getIdToken())
       router.push("/dashboard-2")
       router.refresh()
     } catch (error) {
+      console.error("Google sign in failed:", error)
       form.setError("root", {
         message: getFirebaseAuthErrorMessage(error),
       })

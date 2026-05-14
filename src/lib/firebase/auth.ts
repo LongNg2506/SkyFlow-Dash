@@ -53,8 +53,10 @@ export function getFirebaseAuthErrorMessage(
   mode: "signin" | "signup" = "signin"
 ) {
   let errorCode: string | null = null
+  let errorMessage = ""
 
   if (error instanceof Error) {
+    errorMessage = error.message
     const code = (error as { code?: string }).code
     if (code) {
       errorCode = code
@@ -63,8 +65,20 @@ export function getFirebaseAuthErrorMessage(
       if (match) errorCode = match[0]
     }
   } else if (typeof error === "string") {
+    errorMessage = error
     const match = error.match(/auth\/[\w-]+/)
     if (match) errorCode = match[0]
+  }
+
+  if (
+    errorMessage.includes("Firebase Auth not initialized") ||
+    errorMessage.includes("Firebase is not configured")
+  ) {
+    return "Firebase is not configured on this deployment. Add the NEXT_PUBLIC_FIREBASE_* environment variables in Vercel and redeploy."
+  }
+
+  if (errorMessage.includes("Firestore not initialized")) {
+    return "Firestore is not configured on this deployment. Check the Firebase environment variables in Vercel."
   }
 
   switch (errorCode) {
